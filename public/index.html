@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Extractor de enlaces Descargar</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="cabecera">
+        <div class="cabecera-titulo">
+          <h1>Extractor de enlaces Descargar</h1>
+          <button
+            type="button"
+            id="restablecer-zoom"
+            class="btn-zoom"
+            title="Restablecer zoom del navegador al 100%"
+          >
+            100&nbsp;%
+          </button>
+        </div>
+        <p class="intro">
+          <strong>estrenosgo.in</strong> o <strong>dontorrent.pink</strong>:
+          pega la URL y obtén los enlaces «Descargar». ¿Zoom raro? Pulsa
+          <strong>100&nbsp;%</strong> o <kbd>Ctrl</kbd>+<kbd>0</kbd> /
+          <kbd>Cmd</kbd>+<kbd>0</kbd>.
+        </p>
+      </header>
+
+      <section class="card">
+        <label for="url">URL de la página</label>
+        <div class="input-row">
+          <input
+            id="url"
+            type="url"
+            placeholder="https://estrenosgo.in/serie/..."
+            autocomplete="url"
+            required
+          />
+          <button id="buscar" type="button" class="primary">
+            Buscar enlaces
+          </button>
+        </div>
+        <small class="help">
+          Solo se permiten URLs de los dominios estrenosgo.in y dontorrent.pink
+        </small>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Enlaces encontrados</h2>
+          <button id="copiar" type="button" disabled>
+            Copiar todos
+          </button>
+        </div>
+        <ul id="lista" class="lista"></ul>
+        <p id="estado" class="estado"></p>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

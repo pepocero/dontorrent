@@ -1,0 +1,14 @@
+{
+  "name": "estrenosgo-link-extractor",
+  "version": "1.0.0",
+  "description": "Extrae enlaces Descargar desde estrenosgo.in",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "express": "^4.21.0"
+  }
+}
