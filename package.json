@@ -5,10 +5,16 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "wrangler pages dev public",
+    "build": "node -e \"process.stdout.write('ok')\"",
+    "deploy": "wrangler pages deploy public"
   },
   "dependencies": {
     "cheerio": "^1.0.0",
     "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.80.0"
   }
 }
