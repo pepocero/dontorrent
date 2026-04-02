@@ -1,6 +1,7 @@
 const inputUrl = document.getElementById('url');
 const btnBuscar = document.getElementById('buscar');
 const btnCopiar = document.getElementById('copiar');
+const btnNuevosEnlaces = document.getElementById('nuevos-enlaces');
 const btnZoom = document.getElementById('restablecer-zoom');
 const lista = document.getElementById('lista');
 const estado = document.getElementById('estado');
@@ -130,8 +131,22 @@ function restablecerZoom() {
   mostrarToast('Atajo: Ctrl+0 o Cmd+0 para zoom al 100%');
 }
 
+function nuevosEnlaces() {
+  inputUrl.value = '';
+  limpiarLista();
+  btnBuscar.disabled = false;
+  setEstado('Esperando una URL para comenzar.');
+  if (toast) {
+    toast.classList.remove('mostrar');
+  }
+  inputUrl.focus();
+}
+
 btnBuscar.addEventListener('click', buscarEnlaces);
 btnCopiar.addEventListener('click', copiarEnlaces);
+if (btnNuevosEnlaces) {
+  btnNuevosEnlaces.addEventListener('click', nuevosEnlaces);
+}
 if (btnZoom) {
   btnZoom.addEventListener('click', restablecerZoom);
 }
