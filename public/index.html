@@ -3,70 +3,111 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Extrae enlaces de descarga torrent desde estrenosgo.in y dontorrent.pink."
+    />
     <title>Extractor de enlaces Descargar</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <main class="container">
-      <header class="cabecera">
-        <div class="cabecera-titulo">
-          <h1>Extractor de enlaces Descargar</h1>
-          <button
-            type="button"
-            id="restablecer-zoom"
-            class="btn-zoom"
-            title="Restablecer zoom del navegador al 100%"
-          >
-            100&nbsp;%
-          </button>
+    <div class="page">
+      <header class="site-header">
+        <div class="site-header-inner">
+          <a href="/" class="site-brand">
+            <span class="site-brand-mark" aria-hidden="true"></span>
+            <span class="site-brand-text">Extractor enlaces</span>
+          </a>
+          <nav class="site-header-nav" aria-label="Principal">
+            <a href="/herramienta.html" class="site-nav-link site-nav-link--accent"
+              >Abrir herramienta</a
+            >
+          </nav>
         </div>
-        <p class="intro">
-          <strong>estrenosgo.in</strong> o <strong>dontorrent.pink</strong>:
-          pega la URL y obtén los enlaces «Descargar». ¿Zoom raro? Pulsa
-          <strong>100&nbsp;%</strong> o <kbd>Ctrl</kbd>+<kbd>0</kbd> /
-          <kbd>Cmd</kbd>+<kbd>0</kbd>.
-        </p>
       </header>
 
-      <section class="card">
-        <label for="url">URL de la página</label>
-        <div class="input-row">
-          <input
-            id="url"
-            type="url"
-            placeholder="https://estrenosgo.in/serie/..."
-            autocomplete="url"
-            required
-          />
-          <button id="buscar" type="button" class="primary">
-            Buscar enlaces
-          </button>
-        </div>
-        <small class="help">
-          Solo se permiten URLs de los dominios estrenosgo.in y dontorrent.pink
-        </small>
-      </section>
+      <main>
+        <section class="hero">
+          <div class="container hero-inner">
+            <p class="hero-eyebrow">Herramienta web</p>
+            <h1 class="hero-title">
+              Extrae enlaces de descarga en un solo paso
+            </h1>
+            <p class="hero-lead">
+              Conecta con páginas de <strong>estrenosgo.in</strong> y
+              <strong>dontorrent.pink</strong>, localiza los botones «Descargar»
+              y obtén la lista de archivos torrent listos para copiar.
+            </p>
+            <div class="hero-actions">
+              <a href="/herramienta.html" class="btn-cta primary"
+                >Ir a la herramienta</a
+              >
+              <span class="hero-actions-note"
+                >Sin registro · Solo URLs de dominios permitidos</span
+              >
+            </div>
+          </div>
+        </section>
 
-      <section class="card">
-        <div class="card-header">
-          <h2>Enlaces encontrados</h2>
-          <div class="card-acciones">
-            <button id="nuevos-enlaces" type="button" class="btn-secundario">
-              Nuevos enlaces
-            </button>
-            <button id="copiar" type="button" disabled>
-              Copiar todos
-            </button>
+        <div class="container section-block">
+          <h2 class="section-title">Cómo funciona</h2>
+          <ul class="feature-grid" role="list">
+            <li class="feature-card">
+              <span class="feature-card-num" aria-hidden="true">1</span>
+              <h3 class="feature-card-title">Pega la URL</h3>
+              <p class="feature-card-text">
+                Copia el enlace de la ficha o de la lista de episodios en el
+                sitio compatible.
+              </p>
+            </li>
+            <li class="feature-card">
+              <span class="feature-card-num" aria-hidden="true">2</span>
+              <h3 class="feature-card-title">Procesamiento</h3>
+              <p class="feature-card-text">
+                El servicio analiza la página y resuelve los enlaces de
+                descarga, incluidas las rutas protegidas del propio sitio.
+              </p>
+            </li>
+            <li class="feature-card">
+              <span class="feature-card-num" aria-hidden="true">3</span>
+              <h3 class="feature-card-title">Copia y usa</h3>
+              <p class="feature-card-text">
+                Revisa la lista, abre cada torrent o copia todos los enlaces al
+                portapapeles para tu cliente habitual.
+              </p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="container section-block section-block--cta">
+          <div class="cta-panel">
+            <h2 class="cta-panel-title">¿Listo para empezar?</h2>
+            <p class="cta-panel-text">
+              Accede al extractor y pega la primera URL cuando quieras.
+            </p>
+            <a href="/herramienta.html" class="btn-cta primary btn-cta--lg"
+              >Abrir herramienta</a
+            >
           </div>
         </div>
-        <ul id="lista" class="lista"></ul>
-        <p id="estado" class="estado"></p>
-      </section>
-    </main>
+      </main>
 
-    <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-    <script src="/app.js"></script>
+      <footer class="site-footer">
+        <div class="container site-footer-inner">
+          <p class="site-footer-disclaimer">
+            Solo se admiten enlaces de los dominios indicados. El uso de los
+            contenidos descargados es responsabilidad de quien los utiliza.
+          </p>
+          <p class="site-footer-copy">Extractor de enlaces Descargar</p>
+        </div>
+      </footer>
+    </div>
   </body>
 </html>
