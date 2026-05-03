@@ -43,12 +43,22 @@ function renderLista(enlaces) {
   });
 }
 
+/** Debe coincidir con lib/host-allowed.js */
+function hostnamePermitidoExtraccion(host) {
+  if (!host || typeof host !== 'string') return false;
+  const h = host.trim().toLowerCase();
+  if (!h) return false;
+  const DNS_LABEL = '[a-z0-9](?:[a-z0-9-]*[a-z0-9])?';
+  const marca = (nombre) =>
+    new RegExp(`^(?:${DNS_LABEL}\\.)*${nombre}\\.${DNS_LABEL}$`, 'i');
+  return marca('estrenosgo').test(h) || marca('dontorrent').test(h);
+}
+
 function validarUrlCliente(valor) {
   try {
     const url = new URL(valor);
     if (!['http:', 'https:'].includes(url.protocol)) return false;
-    const host = url.hostname.toLowerCase();
-    return host.endsWith('estrenosgo.in') || host.endsWith('dontorrent.pink');
+    return hostnamePermitidoExtraccion(url.hostname);
   } catch {
     return false;
   }
@@ -58,7 +68,7 @@ async function buscarEnlaces() {
   const url = inputUrl.value.trim();
   if (!validarUrlCliente(url)) {
     setEstado(
-      'La URL debe ser válida y del dominio estrenosgo.in o dontorrent.pink.'
+      'La URL debe ser válida y de un dominio oficial estrenosgo.* o dontorrent.* (cualquier extensión).'
     );
     limpiarLista();
     return;
