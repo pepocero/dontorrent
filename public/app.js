@@ -44,14 +44,54 @@ function renderLista(enlaces) {
 }
 
 /** Debe coincidir con lib/host-allowed.js */
+function esIPv4(host) {
+  const partes = host.split('.');
+  if (partes.length !== 4) return false;
+  return partes.every((parte) => {
+    if (!/^\d+$/.test(parte)) return false;
+    if (parte.length > 1 && parte.startsWith('0')) return false;
+    const n = Number(parte);
+    return Number.isInteger(n) && n >= 0 && n <= 255;
+  });
+}
+
+function esIPv6(host) {
+  return host.includes(':');
+}
+
+function esHostNoPublico(host) {
+  if (!host) return true;
+  if (host === 'localhost') return true;
+  if (host.endsWith('.localhost') || host.endsWith('.local')) return true;
+
+  if (esIPv4(host)) {
+    const [a, b] = host.split('.').map(Number);
+    if (a === 10) return true;
+    if (a === 127) return true;
+    if (a === 0) return true;
+    if (a === 169 && b === 254) return true;
+    if (a === 172 && b >= 16 && b <= 31) return true;
+    if (a === 192 && b === 168) return true;
+    if (a >= 224) return true;
+    return false;
+  }
+
+  if (esIPv6(host)) {
+    if (host === '::1') return true;
+    if (host.startsWith('fe80:')) return true;
+    if (host.startsWith('fc') || host.startsWith('fd')) return true;
+    if (host === '::') return true;
+    return false;
+  }
+
+  return false;
+}
+
 function hostnamePermitidoExtraccion(host) {
   if (!host || typeof host !== 'string') return false;
   const h = host.trim().toLowerCase();
   if (!h) return false;
-  const DNS_LABEL = '[a-z0-9](?:[a-z0-9-]*[a-z0-9])?';
-  const marca = (nombre) =>
-    new RegExp(`^(?:${DNS_LABEL}\\.)*${nombre}\\.${DNS_LABEL}$`, 'i');
-  return marca('estrenosgo').test(h) || marca('dontorrent').test(h);
+  return !esHostNoPublico(h);
 }
 
 function validarUrlCliente(valor) {
@@ -68,7 +108,7 @@ async function buscarEnlaces() {
   const url = inputUrl.value.trim();
   if (!validarUrlCliente(url)) {
     setEstado(
-      'La URL debe ser válida y de un dominio oficial estrenosgo.* o dontorrent.* (cualquier extensión).'
+      'La URL debe usar http/https y un dominio público accesible (incluye proxies y mirrors).'
     );
     limpiarLista();
     return;
