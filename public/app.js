@@ -104,6 +104,31 @@ function validarUrlCliente(valor) {
   }
 }
 
+async function sha256HexAnubis(text) {
+  const data = new TextEncoder().encode(String(text));
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+/** PoW Anubis en el navegador (Cloudflare Workers no puede hacerlo en servidor). */
+async function resolverAnubisEnNavegador(randomData, difficulty) {
+  const target = '0'.repeat(difficulty);
+  const inicio = Date.now();
+  let nonce = 0;
+  for (;;) {
+    const hashHex = await sha256HexAnubis(`${randomData}${nonce}`);
+    if (hashHex.startsWith(target)) {
+      return { nonce, response: hashHex, elapsedTime: Date.now() - inicio };
+    }
+    nonce++;
+    if (nonce % 5000 === 0) {
+      await new Promise((r) => setTimeout(r, 0));
+    }
+  }
+}
+
 async function buscarEnlaces() {
   const url = inputUrl.value.trim();
   if (!validarUrlCliente(url)) {
@@ -116,12 +141,49 @@ async function buscarEnlaces() {
 
   btnBuscar.disabled = true;
   btnCopiar.disabled = true;
-  setEstado('Buscando enlaces...');
+  setEstado('Comprobando acceso al sitio...');
   lista.innerHTML = '';
 
   try {
-    const res = await fetch(`/api/extract-links?url=${encodeURIComponent(url)}`);
-    const data = await res.json();
+    const chRes = await fetch(
+      `/api/anubis-challenge?url=${encodeURIComponent(url)}`
+    );
+    const ch = await chRes.json();
+
+    if (!ch.ok) {
+      setEstado(ch.error || 'No se pudo comprobar el acceso al sitio.');
+      limpiarLista();
+      return;
+    }
+
+    let extractRes;
+
+    if (ch.needsAnubis) {
+      setEstado('Resolviendo verificación anti-bot en tu navegador...');
+      const sol = await resolverAnubisEnNavegador(ch.randomData, ch.difficulty);
+      setEstado('Buscando enlaces...');
+      extractRes = await fetch('/api/extract-links', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url,
+          anubis: {
+            id: ch.challengeId,
+            nonce: sol.nonce,
+            response: sol.response,
+            elapsedTime: sol.elapsedTime,
+            cookies: ch.cookies,
+          },
+        }),
+      });
+    } else {
+      setEstado('Buscando enlaces...');
+      extractRes = await fetch(
+        `/api/extract-links?url=${encodeURIComponent(url)}`
+      );
+    }
+
+    const data = await extractRes.json();
 
     if (!data.ok) {
       setEstado(data.error || 'No se pudieron obtener los enlaces.');

@@ -1,25 +1,27 @@
-import { extractLinksFromPage } from '../../lib/extract-core.js';
-
-const securityHeaders = {
-  'Content-Type': 'application/json; charset=utf-8',
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'no-referrer',
-  'X-Frame-Options': 'DENY',
-};
+import { handleExtractLinks } from '../../lib/extract-handler.js';
 
 export async function onRequestGet(context) {
-  const url = new URL(context.request.url).searchParams.get('url');
-  const result = await extractLinksFromPage(url);
+  const params = new URL(context.request.url).searchParams;
+  const url = params.get('url');
+  const anubis =
+    params.get('anubis_id') != null
+      ? {
+          id: params.get('anubis_id'),
+          nonce: params.get('anubis_nonce'),
+          response: params.get('anubis_response'),
+          elapsedTime: params.get('anubis_elapsed'),
+          cookies: params.get('anubis_cookies') ?? '',
+        }
+      : null;
+  return handleExtractLinks(url, anubis);
+}
 
-  if (!result.ok) {
-    return new Response(JSON.stringify({ ok: false, error: result.error }), {
-      status: result.status,
-      headers: securityHeaders,
-    });
+export async function onRequestPost(context) {
+  let body = null;
+  try {
+    body = await context.request.json();
+  } catch {
+    return handleExtractLinks(null, null);
   }
-
-  return new Response(JSON.stringify({ ok: true, enlaces: result.enlaces }), {
-    status: 200,
-    headers: securityHeaders,
-  });
+  return handleExtractLinks(body?.url, body?.anubis ?? null);
 }
